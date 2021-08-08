@@ -18,8 +18,7 @@ const App = () => {
       <Button clickHandler={setFeedback(setGood, good)} text="Good" />
       <Button clickHandler={setFeedback(setNeutral, neutral)} text="Neutral" />
       <Button clickHandler={setFeedback(setBad, bad)} text="Bad" />
-      <h2>Statistics</h2>
-      <Display feedbackArray={feedbackTracked} />
+      <Statistics feedbackTracked={feedbackTracked} />
     </div>
   )
 }
@@ -30,16 +29,17 @@ const Button = ({ clickHandler, text }) => {
   )
 }
 
-const Display = ({ feedbackArray }) => {
-  const allFeedback = feedbackArray.reduce((accumulator, current) => accumulator + current)
-  const averageFeedback = (feedbackArray[0] - feedbackArray[2]) / allFeedback || 0
-  const positiveFeedback = (feedbackArray[0] / allFeedback) * 100 || 0
+const Statistics = ({ feedbackTracked }) => {
+  const allFeedback = feedbackTracked.reduce((accumulator, current) => accumulator + current)
+  const averageFeedback = (feedbackTracked[0] - feedbackTracked[2]) / allFeedback || 0
+  const positiveFeedback = (feedbackTracked[0] / allFeedback) * 100 || 0
   return (
     <div>
+      <h2>Statistics</h2>
       <p>
-        <FeedbackTracker feedback={feedbackArray[0]} text="Good" />
-        <FeedbackTracker feedback={feedbackArray[1]} text="Neutral" />
-        <FeedbackTracker feedback={feedbackArray[2]} text="Bad" />
+        <FeedbackTracker feedback={feedbackTracked[0]} text="Good" />
+        <FeedbackTracker feedback={feedbackTracked[1]} text="Neutral" />
+        <FeedbackTracker feedback={feedbackTracked[2]} text="Bad" />
         <FeedbackTracker feedback={allFeedback} text="All" />
         <FeedbackTracker feedback={averageFeedback} text="Average" />
         <FeedbackTracker feedback={positiveFeedback} text="Positive" />
