@@ -42,20 +42,20 @@ const Statistics = ({ feedbackTracked }) => {
   }
   return (  
     <div>
-      <FeedbackTracker feedback={feedbackTracked[0]} text="Good" />
-      <FeedbackTracker feedback={feedbackTracked[1]} text="Neutral" />
-      <FeedbackTracker feedback={feedbackTracked[2]} text="Bad" />
-      <FeedbackTracker feedback={allFeedback} text="All" />
-      <FeedbackTracker feedback={averageFeedback} text="Average" />
-      <FeedbackTracker feedback={positiveFeedback} text="Positive" />
+      <StatisticLine value={feedbackTracked[0]} text="Good" />
+      <StatisticLine value={feedbackTracked[1]} text="Neutral" />
+      <StatisticLine value={feedbackTracked[2]} text="Bad" />
+      <StatisticLine value={allFeedback} text="All" />
+      <StatisticLine value={averageFeedback} text="Average" />
+      <StatisticLine value={positiveFeedback} text="Positive" />
     </div>
   )
 }
 
-const FeedbackTracker = ({ feedback, text }) => {
+const StatisticLine = ({ value, text }) => {
   return (
     <>
-      {text + ": " + feedback}<br></br>
+      {text + ": " + value}<br></br>
     </>
   )
 }
