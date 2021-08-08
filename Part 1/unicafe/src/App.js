@@ -33,7 +33,7 @@ const Button = ({ clickHandler, text }) => {
 const Statistics = ({ feedbackTracked }) => {
   const allFeedback = feedbackTracked.reduce((accumulator, current) => accumulator + current)
   const averageFeedback = (feedbackTracked[0] - feedbackTracked[2]) / allFeedback || 0
-  const positiveFeedback = (feedbackTracked[0] / allFeedback) * 100 || 0
+  const positiveFeedback = (feedbackTracked[0] / allFeedback) * 100 + "%" || 0
   
   if (allFeedback === 0) {
     return (
@@ -41,22 +41,25 @@ const Statistics = ({ feedbackTracked }) => {
     )
   }
   return (  
-    <div>
-      <StatisticLine value={feedbackTracked[0]} text="Good" />
-      <StatisticLine value={feedbackTracked[1]} text="Neutral" />
-      <StatisticLine value={feedbackTracked[2]} text="Bad" />
-      <StatisticLine value={allFeedback} text="All" />
-      <StatisticLine value={averageFeedback} text="Average" />
-      <StatisticLine value={positiveFeedback} text="Positive" />
-    </div>
+    <table>
+      <tbody>
+        <StatisticLine value={feedbackTracked[0]} text="Good" />
+        <StatisticLine value={feedbackTracked[1]} text="Neutral" />
+        <StatisticLine value={feedbackTracked[2]} text="Bad" />
+        <StatisticLine value={allFeedback} text="All" />
+        <StatisticLine value={averageFeedback} text="Average" />
+        <StatisticLine value={positiveFeedback} text="Positive" />
+      </tbody>
+    </table>
   )
 }
 
 const StatisticLine = ({ value, text }) => {
   return (
-    <>
-      {text + ": " + value}<br></br>
-    </>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
