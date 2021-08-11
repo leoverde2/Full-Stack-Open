@@ -6,6 +6,7 @@ import Countries from './components/Countries'
 function App() {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
+  const [collapsed, setCollapsed] = useState({})
 
   useEffect(() => {
     axios
@@ -27,13 +28,25 @@ function App() {
     )
   }
 
+  const handleCollapse = (country) => {
+    const name = country.props.country.name
+    const collapsedCopy = {...collapsed}
+    if (collapsedCopy[name] === false) {
+      collapsedCopy[name] = true
+    }
+    else {
+      collapsedCopy[name] = false
+    }
+    setCollapsed(collapsedCopy)
+  }
+
   return (
     <div>
       <Filter
         filter={filter}
         handleFilterChange={(event) => setFilter(event.target.value)}
       />
-      <Countries countriesToShow={countriesToShow} />
+      <Countries countriesToShow={countriesToShow} handleCollapse={handleCollapse} collapsed={collapsed} />
     </div>
   )
 }
