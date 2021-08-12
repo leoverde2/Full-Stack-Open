@@ -1,4 +1,5 @@
-import React from "react"
+import axios from "axios"
+import React, { useEffect, useState } from "react"
 
 const Countries = ({ countriesToShow, handleCollapse, collapsed }) => {
   const countriesNames = countriesToShow().map(country =>
@@ -21,28 +22,60 @@ const Display = ({ countriesNames, handleCollapse, collapsed }) => {
   }
   else if (countriesNames.length === 1) {
     const country = countriesNames[0].props.country
-    return <CountryInfo countryName={country} />
+    return <OneCountry country={country} />
   }
-  else if (countriesNames.length > 1) {
+  else {
     const countries = countriesNames.map(country => {
       return (
-        <CountryAndButton
-        key={country.props.country.name}
-        collapsed={collapsed}
-        country={country}
-        handleCollapse={handleCollapse} />
+        <ManyCountries
+          key={country.props.country.name}
+          collapsed={collapsed}
+          country={country}
+          handleCollapse={handleCollapse}
+        />
       )
     })
     return (
       countries
     )
   }
-  else {
-    return countriesNames
-  }
+
 }
 
-const CountryAndButton = ({ country, handleCollapse, collapsed }) => {
+const OneCountry = ({ country }) => {
+  return (
+    <div>
+      <CountryInfo country={country} />
+      <Weather country={country} />
+    </div>
+  )
+}
+
+const Weather = ({ country }) => {
+  const [weather, setWeather] = useState({request:{}, location:{}, current: {}})
+
+  const access_key = process.env.REACT_APP_API_KEY
+  const capital = country.capital
+  const url = `http://api.weatherstack.com/current?access_key=${access_key}&query=${capital}`
+
+  useEffect(() => {
+    axios
+      .get(url)
+      .then(response => {
+        setWeather(response.data)
+      })
+  }, )
+  return (
+    <div>
+      <h2>Weather in {capital}</h2>
+      <div>Temperature: {weather.current.temperature} Celcius</div>
+      <img alt="Weather" src={weather.current.weather_icons} width={60} height={60} ></img>
+      <div>Wind: {weather.current.wind_speed} mph direction {weather.current.wind_dir}</div>
+    </div>
+  )
+}
+
+const ManyCountries = ({ country, handleCollapse, collapsed }) => {
   if (collapsed[country.props.country.name] !== false) {
     return (
       <div>
@@ -56,7 +89,7 @@ const CountryAndButton = ({ country, handleCollapse, collapsed }) => {
     return (
       <div>
         <CollapseButton country={country} handleCollapse={handleCollapse} show={false} />
-        <CountryInfo countryName={countryInfo} />
+        <CountryInfo country={countryInfo} />
       </div>
     )
   }
@@ -70,8 +103,7 @@ const CollapseButton = ({ country, handleCollapse, show }) => {
   )
 }
 
-const CountryInfo = ({ countryName }) => {
-  const country = countryName
+const CountryInfo = ({ country }) => {
   const languagesSpoken = country.languages.map(language => {
     return (
       <li key={language.name}>{language.name}</li>
