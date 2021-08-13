@@ -38,6 +38,16 @@ const App = () => {
     }
   }
 
+  const deletePerson = person => {
+    if (window.confirm(`Delete ${person.name}`)) {
+      personService
+        .deleteObject(person.id)
+        .then(() => {
+          setPersons(persons.filter(object => object.id !== person.id))
+        })
+    }
+  }
+
   const personToShow = () => {
     const filterLowercased = newFilter.toLowerCase()
     const filtered = persons.filter(person => {
@@ -67,7 +77,10 @@ const App = () => {
         handleNumberChange={setState(setNewNumber)}
       />
       <h2>Numbers</h2>
-      <Persons personToShow={personToShow} />
+      <Persons
+        personToShow={personToShow}
+        deletePerson={deletePerson}
+      />
     </div>
   )
 }
