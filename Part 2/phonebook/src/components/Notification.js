@@ -6,11 +6,20 @@ const Notification = ({ message }) => {
     return null
   }
 
-  return (
-    <div className="success">
-      {message}
-    </div>
-  )
+  else if (message.type === "success"){
+    return (
+      <div className="success">
+        {message.content}
+      </div>
+    )
+  }
+  else if (message.type === "error"){
+    return (
+      <div className="error">
+        {message.content}
+      </div>
+    )
+  }
 }
 
 
