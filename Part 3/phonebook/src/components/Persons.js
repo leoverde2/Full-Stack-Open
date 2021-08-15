@@ -3,7 +3,7 @@ import React from "react"
 const Persons = ({ personToShow, deletePerson }) => {
   return (
     personToShow().map(person =>
-      <Person key={person.name} person={person} deletePerson={deletePerson} />
+      <Person key={person.id} person={person} deletePerson={deletePerson} />
     )
   )
 }
