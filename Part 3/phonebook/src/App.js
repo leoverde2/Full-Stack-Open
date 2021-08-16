@@ -33,8 +33,12 @@ const App = () => {
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
           })
           .catch(error => {
-            setNotificationMessage({ content: `Information of ${newName} has already been deleted from the server `, type: "error" })
-            setPersons(persons.filter(person => person.name !== newName))
+            if (error.name === 'TypeError'){
+              setNotificationMessage({ content: `Information of ${newName} has already been deleted from the server `, type: "error" })
+              setPersons(persons.filter(person => person.name !== newName))
+            } else {
+              setNotificationMessage({ content: `${error.response.data.error}`, type: "error" })
+            }
           })
         setNewName("")
         setNewNumber("")
@@ -52,7 +56,7 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
         })
         .catch(error => {
-          setNotificationMessage({ content: `Input is in wrong format`, type: "error" })
+          setNotificationMessage({ content: `${error.response.data.error}`, type: "error" })
           setPersons(persons.filter(person => person.name !== newName))
         })
       setNewName("")
