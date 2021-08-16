@@ -22,31 +22,45 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-
-    const personObject = {
-      name: newName,
-      number: newNumber
+    const repeated = persons.filter(currentPerson => currentPerson.name === newName)
+    if (repeated.length === 1) {
+      if (window.confirm(`${repeated[0].name} is already added to phonebook, replace the old number with a new one?`)) {
+        const changedNumber = { ...repeated[0], number: newNumber }
+        personService
+          .replace(repeated[0].id, changedNumber)
+          .then(returnedPerson => {
+            setNotificationMessage({ content: `Changed ${returnedPerson.name} number`, type: "success" })
+            setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
+          })
+          .catch(error => {
+            setNotificationMessage({ content: `Information of ${newName} has already been deleted from the server `, type: "error" })
+            setPersons(persons.filter(person => person.name !== newName))
+          })
+        setNewName("")
+        setNewNumber("")
+      }
     }
-    personService
-      .create(personObject)
-      .then(returnedPerson => {
-        setNotificationMessage({ content: `Added ${returnedPerson.name}`, type: "success" })
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
-        setPersons(persons.concat(returnedPerson))
-        setNewName("")
-        setNewNumber("")
-      })
-      .catch(error => {
-        setNotificationMessage({ content: `Input is in wrong format`, type: "error" })
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
-        setPersons(persons.filter(person => person.name !== newName))
-        setNewName("")
-        setNewNumber("")
-      })
+    else {
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setNotificationMessage({ content: `Added ${returnedPerson.name}`, type: "success" })
+          setPersons(persons.concat(returnedPerson))
+        })
+        .catch(error => {
+          setNotificationMessage({ content: `Input is in wrong format`, type: "error" })
+          setPersons(persons.filter(person => person.name !== newName))
+        })
+      setNewName("")
+      setNewNumber("")
+    }
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   const deletePerson = person => {
